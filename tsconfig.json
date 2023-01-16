@@ -19,7 +19,7 @@
     "paths": {
       "@env/*": ["./src/env/*"],
       "@server/*": ["./src/server/*"],
-      "@pages/*": ["./src/pages/*"],
+      "@pages/*": ["./src/pages/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],

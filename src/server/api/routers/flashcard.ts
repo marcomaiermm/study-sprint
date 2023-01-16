@@ -19,11 +19,13 @@ export const flashcardRouter = createTRPCRouter({
     });
   }),
 
-  getMany: publicProcedure.input(z.number().optional()).query(({ ctx, input }) => {
-    return ctx.prisma.flashcard.findMany({
-      take: input,
-    });
-  }),
+  getMany: publicProcedure
+    .input(z.number().optional())
+    .query(({ ctx, input }) => {
+      return ctx.prisma.flashcard.findMany({
+        take: input,
+      });
+    }),
 
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
