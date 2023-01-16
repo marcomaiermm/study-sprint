@@ -60,7 +60,7 @@ model VerificationToken {
 }
 
 model Flashcard {
-  id         Int          @id @default(autoincrement())
+  id         String       @id @default(cuid())
   question   String
   answer     String       @default("")
   user       User         @relation(fields: [userId], references: [id])
@@ -68,31 +68,31 @@ model Flashcard {
   schedule   Schedule[]
   exam       Exam         @relation(fields: [examId], references: [id])
   userId     String
-  examId     Int
+  examId     String
   Attachment Attachment[]
 }
 
 model Rating {
-  id           Int       @id @default(autoincrement())
+  id           String    @id @default(cuid())
   flashcard    Flashcard @relation(fields: [flashcardId], references: [id])
   user         User      @relation(fields: [userId], references: [id])
   rating       String
   date_updated DateTime  @default(now())
-  flashcardId  Int
+  flashcardId  String
   userId       String
 }
 
 model Schedule {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
   user        User      @relation(fields: [userId], references: [id])
   date_due    DateTime
-  flashcardId Int
+  flashcardId String
   userId      String
 }
 
 model Exam {
-  id         Int         @id @default(autoincrement())
+  id         String      @id @default(cuid())
   name       String
   dueDate    DateTime
   flashcards Flashcard[]
@@ -101,12 +101,12 @@ model Exam {
 }
 
 model Attachment {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   url         String
   name        String
   type        String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
-  flashcardId Int
+  flashcardId String
 }
