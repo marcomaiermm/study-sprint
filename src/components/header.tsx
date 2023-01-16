@@ -21,7 +21,7 @@ const Header: React.FC = () => {
           </Link>
           {sessionData && sessionData.user && (
             <div>
-              <Link href={`/cards/${sessionData.user.id}`}>Cards</Link>
+              <Link href={`/user/${sessionData.user.id}`}>Decks</Link>
             </div>
           )}
         </div>

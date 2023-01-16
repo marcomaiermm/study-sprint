@@ -49,6 +49,7 @@ model User {
   ratings       Rating[]
   schedule      Schedule[]
   exams         Exam[]
+  Deck          Deck[]
 }
 
 model VerificationToken {
@@ -70,6 +71,17 @@ model Flashcard {
   userId     String
   examId     String
   Attachment Attachment[]
+  Deck       Deck?        @relation(fields: [deckId], references: [id])
+  deckId     String?
+}
+
+model Deck {
+  id         String      @id @default(cuid())
+  name       String
+  flashcards Flashcard[]
+  user       User        @relation(fields: [userId], references: [id])
+  userId     String
+  Exam       Exam[]
 }
 
 model Rating {
@@ -92,12 +104,14 @@ model Schedule {
 }
 
 model Exam {
-  id         String      @id @default(cuid())
-  name       String
-  dueDate    DateTime
-  flashcards Flashcard[]
-  User       User?       @relation(fields: [userId], references: [id])
-  userId     String?
+  id        String      @id @default(cuid())
+  name      String
+  dueDate   DateTime
+  deck      Deck        @relation(fields: [deckId], references: [id])
+  User      User?       @relation(fields: [userId], references: [id])
+  deckId    String
+  userId    String?
+  Flashcard Flashcard[]
 }
 
 model Attachment {
