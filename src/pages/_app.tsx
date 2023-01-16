@@ -6,6 +6,8 @@ import { api } from "../utils/api";
 
 import "../styles/globals.css";
 
+import Header from "@components/header";
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
@@ -13,7 +15,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <div className="bg-slate-100 text-base dark:bg-slate-900 dark:text-slate-100">
-        <Component {...pageProps} />
+        <Header />
+        <main className="flex min-h-screen flex-col">
+          <Component {...pageProps} />
+        </main>
       </div>
     </SessionProvider>
   );
