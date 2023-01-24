@@ -3,7 +3,7 @@ import Head from "next/head";
 import { api } from "../utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.flashcard.hello.useQuery({ id: 1 });
+  const hello = api.flashcard.hello.useQuery({ id: "test" });
 
   return (
     <>

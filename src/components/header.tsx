@@ -21,20 +21,21 @@ const Header: React.FC = () => {
           </Link>
           {sessionData && sessionData.user && (
             <div>
-              <Link href={`/user/${sessionData.user.id}`}>Decks</Link>
+              <Link href={`/deck`}>Decks</Link>
             </div>
           )}
         </div>
-        {sessionData && (
-          <div className="flex items-center justify-end gap-4">
+
+        <div className="flex items-center justify-end gap-4">
+          {sessionData && (
             <span>
               {greetDayCycle()}, {sessionData?.user?.name}
             </span>
-            <div className="h-8 w-8">
-              <Auth />
-            </div>
+          )}
+          <div className="h-8 w-8">
+            <Auth />
           </div>
-        )}
+        </div>
       </nav>
     </>
   );
