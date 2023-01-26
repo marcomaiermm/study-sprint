@@ -9,7 +9,7 @@ import type {
   InferGetServerSidePropsType,
 } from "next";
 
-import type { Deck, Flashcard } from "@prisma/client";
+import type { Deck, Card } from "@prisma/client";
 
 const DeckPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -23,7 +23,7 @@ const DeckPage: NextPage<
         <div className="container">
           <Link
             href={
-              deck.flashcards.length
+              deck.cards.length
                 ? `/deck/${deck.id}/flashcard`
                 : `/deck/${deck.id}/flashcard/create`
             }
@@ -35,7 +35,7 @@ const DeckPage: NextPage<
           <div className="mt-8">
             <h2>Flashcards</h2>
             <div className="grid grid-cols-4">
-              {deck.flashcards.map((card) => (
+              {deck.cards.map((card) => (
                 <Link
                   href={`/deck/${deck.id}/flashcard/${card.id}`}
                   key={card.id}
@@ -54,7 +54,7 @@ const DeckPage: NextPage<
 };
 
 export const getServerSideProps: GetServerSideProps<{
-  deck: Deck & { flashcards: Omit<Flashcard, "userId" | "deckId" | "user">[] };
+  deck: Deck & { cards: Pick<Card, "id" | "front" | "back">[] };
 }> = async (ctx) => {
   const session = await getSession(ctx);
   const deckId = ctx.params?.deckId;
@@ -71,32 +71,20 @@ export const getServerSideProps: GetServerSideProps<{
   const deck = await prisma.deck.findFirst({
     where: {
       id: deckId,
-      OR: [
-        {
-          owner: { id: session.user.id },
-        },
-        {
-          sharedDeck: {
-            some: {
-              id: session.user.id,
-            },
-          },
-        },
-      ],
     },
     include: {
-      flashcards: {
+      cards: {
         select: {
-          question: true,
-          answer: true,
           id: true,
+          front: true,
+          back: true,
         },
       },
     },
   });
 
   if (!deck) {
-    throw new Error("Deck does not exist or is not shared with you");
+    throw new Error("Deck not found");
   }
 
   return { props: { deck } };

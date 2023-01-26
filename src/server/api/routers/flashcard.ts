@@ -12,7 +12,7 @@ export const flashcardRouter = createTRPCRouter({
     }),
 
   getById: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    return await ctx.prisma.flashcard.findFirst({
+    return await ctx.prisma.card.findFirst({
       where: {
         id: input,
       },
@@ -22,7 +22,7 @@ export const flashcardRouter = createTRPCRouter({
   getMany: publicProcedure
     .input(z.number().optional())
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.flashcard.findMany({
+      return await ctx.prisma.card.findMany({
         take: input,
       });
     }),
@@ -40,10 +40,10 @@ export const flashcardRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const deck = await ctx.prisma.flashcard.create({
+      const deck = await ctx.prisma.card.create({
         data: {
-          question: input.question,
-          answer: input.answer,
+          front: input.question,
+          back: input.answer,
           user: {
             connect: {
               id: ctx.session.user.id,

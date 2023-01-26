@@ -26,7 +26,7 @@ export const deckRouter = createTRPCRouter({
     });
   }),
   getById: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    return await ctx.prisma.flashcard.findFirst({
+    return await ctx.prisma.card.findFirst({
       where: {
         id: input,
       },
@@ -47,7 +47,7 @@ export const deckRouter = createTRPCRouter({
       const deck = await ctx.prisma.deck.create({
         data: {
           name: input,
-          owner: {
+          user: {
             connect: {
               id: ctx.session.user.id,
             },
@@ -66,12 +66,10 @@ export const deckRouter = createTRPCRouter({
         id: z.string(),
         name: z.string().optional(),
         flashcards: z.array(z.string()).optional(),
-        exam: z.array(z.string()).optional(),
-        sharedDeck: z.array(z.string()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, flashcards, exam, sharedDeck, ...rest } = input;
+      const { id, flashcards, ...rest } = input;
 
       const deck = ctx.prisma.deck.update({
         where: {
@@ -79,19 +77,9 @@ export const deckRouter = createTRPCRouter({
         },
         data: {
           ...rest,
-          flashcards: {
+          cards: {
             connect: flashcards?.map((flashcardId) => {
               return { id: flashcardId };
-            }),
-          },
-          exam: {
-            connect: exam?.map((flashcardId) => {
-              return { id: flashcardId };
-            }),
-          },
-          sharedDeck: {
-            connect: sharedDeck?.map((userId) => {
-              return { id: userId };
             }),
           },
         },

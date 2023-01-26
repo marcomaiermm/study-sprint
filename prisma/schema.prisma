@@ -38,19 +38,16 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?      @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  flashcards    Flashcard[]
-  ratings       Rating[]
-  schedule      Schedule[]
   exams         Exam[]
-  ownedDecks    Deck[]
-  sharedDecks   SharedDeck[]
+  decks         Deck[]
+  cards         Card[]
 }
 
 model VerificationToken {
@@ -61,73 +58,48 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Flashcard {
-  id         String       @id @default(cuid())
-  question   String
-  answer     String       @default("")
-  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ratings    Rating[]
-  schedule   Schedule[]
-  userId     String
-  attachment Attachment[]
-  deck       Deck         @relation(fields: [deckId], references: [id], onDelete: Cascade)
-  deckId     String
+model Exam {
+  id        String   @id @default(cuid())
+  name      String
+  date      DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  decks     Deck[]
 }
 
 model Deck {
-  id         String       @id @default(cuid())
-  name       String
-  flashcards Flashcard[]
-  owner      User         @relation(fields: [ownderId], references: [id], onDelete: Cascade)
-  ownderId   String
-  exam       Exam[]
-  sharedDeck SharedDeck[]
+  id        String   @id @default(cuid())
+  name      String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  exam      Exam?    @relation(fields: [examId], references: [id], onDelete: Cascade)
+  examId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cards     Card[]
 }
 
-model SharedDeck {
-  id     String @id @default(cuid())
-  deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  deckId String
-  userId String
+model Card {
+  id            String         @id @default(cuid())
+  front         String
+  back          String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  deck          Deck           @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  deckId        String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  cardSchedules CardSchedule[]
 }
 
-model Rating {
-  id           String    @id @default(cuid())
-  flashcard    Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  rating       String
-  date_updated DateTime  @default(now())
-  flashcardId  String
-  userId       String
-}
-
-model Schedule {
-  id          String    @id @default(cuid())
-  flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
-  user        User      @relation(fields: [userId], references: [id])
-  date_due    DateTime
-  flashcardId String
-  userId      String
-}
-
-model Exam {
-  id      String   @id @default(cuid())
-  name    String
-  dueDate DateTime
-  deck    Deck     @relation(fields: [deckId], references: [id])
-  User    User?    @relation(fields: [userId], references: [id])
-  deckId  String
-  userId  String?
-}
-
-model Attachment {
-  id          String    @id @default(cuid())
-  url         String
-  name        String
-  type        String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  flashcard   Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
-  flashcardId String
+model CardSchedule {
+  id         String   @id @default(cuid())
+  card       Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  cardId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  nextReview DateTime
+  interval   Int
 }

@@ -9,7 +9,7 @@ import type {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
-import type { Flashcard } from "@prisma/client";
+import type { Card } from "@prisma/client";
 
 const UserDecks: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -27,7 +27,7 @@ const UserDecks: NextPage<
 };
 
 export const getServerSideProps: GetServerSideProps<{
-  card: Flashcard;
+  card: Card;
 }> = async (ctx) => {
   const session = await getSession(ctx);
   const deckId = ctx.params?.deckId;
@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps<{
     throw new Error("Deck is not shared or owned by user");
   }
 
-  const card = await prisma.flashcard.findFirst({
+  const card = await prisma.card.findFirst({
     where: {
       id: cardId,
       deckId: deckId,

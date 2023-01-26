@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import type { Flashcard } from "@prisma/client";
+import type { Card } from "@prisma/client";
 
 const FlashCardComponent: React.FC<{
-  flashcard?: Omit<Flashcard, "userId" | "deckId" | "user">;
+  flashcard?: Pick<Card, "back" | "front">;
   blockFlip?: boolean;
 }> = ({ flashcard, blockFlip }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -17,11 +17,11 @@ const FlashCardComponent: React.FC<{
         {!isFlipped ? (
           <div className="flex h-full w-full items-center justify-center">
             <div className="relative text-2xl after:absolute after:-bottom-2 after:left-0 after:h-1 after:w-full after:bg-white">
-              {flashcard?.question}
+              {flashcard?.front}
             </div>
           </div>
         ) : (
-          <div>{flashcard?.answer}</div>
+          <div>{flashcard?.back}</div>
         )}
       </div>
     </>
