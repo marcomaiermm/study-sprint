@@ -13,31 +13,29 @@ const Header: React.FC = () => {
     return "Guten Abend";
   };
   return (
-    <>
-      <nav className="flex w-full justify-between bg-slate-800 py-2 px-4 shadow">
-        <div className="flex items-center justify-center gap-4">
-          <Link href="/" className="text-xl">
-            Start
-          </Link>
-          {sessionData && sessionData.user && (
-            <div>
-              <Link href={`/deck`}>Decks</Link>
-            </div>
-          )}
-        </div>
-
-        <div className="flex items-center justify-end gap-4">
-          {sessionData && (
-            <span>
-              {greetDayCycle()}, {sessionData?.user?.name}
-            </span>
-          )}
-          <div className="h-8 w-8">
-            <Auth />
+    <nav className="flex w-full justify-between bg-slate-800 py-2 px-4 shadow">
+      <div className="flex items-center justify-center gap-4">
+        <Link href="/" className="text-xl">
+          Start
+        </Link>
+        {sessionData && sessionData.user && (
+          <div>
+            <Link href={`/deck`}>Decks</Link>
           </div>
+        )}
+      </div>
+
+      <div className="flex items-center justify-end gap-4">
+        {sessionData && (
+          <span>
+            {greetDayCycle()}, {sessionData?.user?.name}
+          </span>
+        )}
+        <div className="h-8 w-8">
+          <Auth />
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 };
 

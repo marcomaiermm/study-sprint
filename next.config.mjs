@@ -13,5 +13,9 @@ const config = {
     locales: ["en", "de"],
     defaultLocale: "de",
   },
+  experimental: {
+    swcPlugins: [["next-superjson-plugin", {}]],
+  },
 };
+
 export default config;

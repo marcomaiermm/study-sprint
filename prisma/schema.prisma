@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
@@ -27,6 +27,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -35,6 +36,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -67,6 +70,8 @@ model Exam {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   decks     Deck[]
+
+  @@index([userId])
 }
 
 model Deck {
@@ -79,19 +84,26 @@ model Deck {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   cards     Card[]
+
+  @@index([userId])
+  @@index([examId])
 }
 
 model Card {
-  id            String         @id @default(cuid())
+  id            String          @id @default(cuid())
   front         String
   back          String
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  deck          Deck           @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  deck          Deck            @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId        String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   cardSchedules CardSchedule[]
+  SuperMemoItem SuperMemoItem[]
+
+  @@index([userId])
+  @@index([deckId])
 }
 
 model CardSchedule {
@@ -102,4 +114,23 @@ model CardSchedule {
   updatedAt  DateTime @updatedAt
   nextReview DateTime
   interval   Int
+
+  @@index([cardId])
+}
+
+model SuperMemoItem {
+  id             String   @id @default(cuid())
+  card           Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  cardId         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  grade          Int
+  difficulty     Float
+  stability      Float
+  retrievability Float
+  repetitions    Int
+  interval       Int
+  lastReview     DateTime
+
+  @@index([cardId])
 }
