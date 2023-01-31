@@ -3,8 +3,6 @@ import { prisma } from "@server/db";
 import { api } from "@utils/api";
 import { useEffect, useState } from "react";
 
-import FlashcardComponent from "@components/flashcard";
-
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 
@@ -30,14 +28,6 @@ const CreateFlashCard: NextPage<{
       deck,
     });
   };
-
-  useEffect(() => {
-    if (mutate.isSuccess) {
-      router
-        .push(`/deck/${deck}/flashcard/${mutate.data.id}`)
-        .catch((err) => console.error(err));
-    }
-  }, [mutate.isSuccess, mutate?.data?.id, router, deck]);
 
   if (!sessionData) return <div>Nicht eingeloggt</div>;
   return (

@@ -19,11 +19,13 @@ export const flashcardRouter = createTRPCRouter({
     });
   }),
 
-  getMany: publicProcedure
-    .input(z.number().optional())
+  getManyByDeck: publicProcedure
+    .input(z.string())
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.card.findMany({
-        take: input,
+        where: {
+          deckId: input,
+        },
       });
     }),
 

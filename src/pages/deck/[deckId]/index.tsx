@@ -29,7 +29,6 @@ const DeckPage: NextPage<
             }
           >
             <h1>Deck: {deck.name}</h1>
-            <p>{deck.id}</p>
           </Link>
 
           <div className="mt-8">

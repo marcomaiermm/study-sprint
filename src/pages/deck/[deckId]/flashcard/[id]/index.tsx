@@ -1,6 +1,5 @@
 import { useSession, getSession } from "next-auth/react";
 import { prisma } from "@server/db";
-import { sharedOrOwnedDeck } from "@utils/deck";
 
 import FlashCard from "@components/flashcard";
 
@@ -43,13 +42,6 @@ export const getServerSideProps: GetServerSideProps<{
 
   if (!cardId || !cardId || typeof cardId !== "string") {
     throw new Error("Card ID is not valid");
-  }
-
-  // make a prisma query to find the deck if it is owned or shared with the user
-  const isSharedOrOwned = await sharedOrOwnedDeck(deckId, session.user.id);
-
-  if (!isSharedOrOwned) {
-    throw new Error("Deck is not shared or owned by user");
   }
 
   const card = await prisma.card.findFirst({
