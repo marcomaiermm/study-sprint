@@ -16,7 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <div className="flex min-h-screen flex-col items-center bg-slate-100 text-base dark:bg-slate-900 dark:text-slate-100">
         <Header />
-        <main className="container flex flex-1 flex-col">
+        <main className="container flex flex-1 flex-col pt-16">
           <Component {...pageProps} />
         </main>
       </div>
